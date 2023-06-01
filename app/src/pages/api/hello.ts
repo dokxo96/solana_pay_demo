@@ -8,7 +8,7 @@ type GetData = {
 }
 
 type PostData = {
-  tx: string
+  transaction: string
   message:String
 }
 let methods:String[]=["GET","POST","PUT","DELETE"];
@@ -18,7 +18,7 @@ function get(req:NextApiRequest,res:NextApiResponse<GetData>){
   const label ="solana pay demo";
   const icon ="https://solana.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Flogotype.e4df684f.svg&w=384&q=75";
 
-  res.status(200).send({label,icon,});
+  res.status(200).send({label,icon});
 
 }
 
