@@ -1,5 +1,5 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { PublicKey, SystemProgram, Transaction } from '@solana/web3.js';
+import { Connection, PublicKey, SystemProgram, Transaction } from '@solana/web3.js';
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 type GetData = {
@@ -22,7 +22,7 @@ function get(req:NextApiRequest,res:NextApiResponse<GetData>){
 
 }
 
-function post(req:NextApiRequest, res:NextApiResponse<PostData>) 
+async function    post(req:NextApiRequest, res:NextApiResponse<PostData>) 
 {
   const accountField=req.body?.account;
   if(!accountField) throw new Error(`No account field''`);
@@ -36,7 +36,10 @@ const ix = SystemProgram.transfer({
 });
 const transaction = new Transaction();
 
-transaction.add(ix)
+transaction.add(ix);
+const connection = new Connection("https://api.devnet.solana.com");
+const bh =await connection.getLatestBlockhash();
+transaction.recentBlockhash=bh.blockhash;
 //Serialize the transaction
  const serializedTX= transaction.serialize({
    verifySignatures:false,
