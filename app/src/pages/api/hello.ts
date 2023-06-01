@@ -40,6 +40,7 @@ transaction.add(ix);
 const connection = new Connection("https://api.devnet.solana.com");
 const bh =await connection.getLatestBlockhash();
 transaction.recentBlockhash=bh.blockhash;
+transaction.feePayer=sender;
 //Serialize the transaction
  const serializedTX= transaction.serialize({
    verifySignatures:false,
