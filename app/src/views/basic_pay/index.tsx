@@ -22,7 +22,7 @@ export const BasicPayView: FC = ({ }) => {
   const balance = useUserSOLBalanceStore((s) => s.balance)
   const { getUserSOLBalance } = useUserSOLBalanceStore()
   const QrRf= useRef<HTMLDivElement>();
-  const solana_url="solana:192.168.100.11:3000/api/hello";
+  const solana_url="solana:https://solana-pay-demo-phi.vercel.app/api/hello";
   const qr = createQR(solana_url,360,'white','black');
   //set the generated solana qr on a ref element
   if(QrRf.current){
