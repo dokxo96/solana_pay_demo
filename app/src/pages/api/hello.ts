@@ -34,7 +34,7 @@ const ix = SystemProgram.transfer({
   toPubkey: new PublicKey("2DL7TkTJXaZHY7NbYHYWje1pbufF3mpbtLc1V26WFGiM"),
   lamports: 133700000
 });
-const transaction = new Transaction();
+let transaction = new Transaction();
 
 transaction.add(ix);
 const connection = new Connection("https://api.devnet.solana.com");
@@ -42,21 +42,28 @@ const bh =await connection.getLatestBlockhash();
 transaction.recentBlockhash=bh.blockhash;
 transaction.feePayer=sender;
 //Serialize the transaction
- const serializedTX= transaction.serialize({
-   verifySignatures:false,
-   requireAllSignatures:false,
- });
+transaction = Transaction.from(transaction.serialize({
+  verifySignatures: false,
+  requireAllSignatures: false,
+}));
+ 
+ // Serialize and return the unsigned transaction.
+ const serializedTransaction = transaction.serialize({
+  verifySignatures: false,
+  requireAllSignatures: false,
+});
+const base64Transaction = serializedTransaction.toString('base64');
 
- const base64transaction = serializedTX.toString("base64");
- const message= "hellow"; 
+ const message= "test solana pay"; 
 
- res.status(200).send({ tx : base64transaction,message});
+ 
+ res.status(200).send({ transaction: base64Transaction, message });
 }
 
 
-export default function handler(
+export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<GetData>
+  res: NextApiResponse<GetData|PostData>
 ) {
   if(req.method=="GET"){
     console.log("🚀 ~ file: hello.ts:13 ~ req:GET method")
@@ -64,7 +71,8 @@ export default function handler(
   }
   else  if(req.method=="POST"){
     console.log("🚀 ~ file: hello.ts:13 ~ req:POST method")
-    
+    console.log("received POST request");
+    return await post(req, res);
   }
   
 }
